@@ -1,9 +1,5 @@
 import numpy as np
-from data_load import load_clus_data, normalize_data, shuffle_data
 from scipy.cluster.hierarchy import linkage
-# import math
-# from scipy.cluster.hierarchy import linkage
-# # from utils import pdist_node
 
 
 class ARTParam:
@@ -156,31 +152,3 @@ class ARTNet:
         else:
             Z = linkage(self.C, link)
         return Z
-
-
-if __name__ == '__main__':
-    data_name = 'iris'
-    D, L = load_clus_data(data_name)
-    D = normalize_data(D)
-    D, L = shuffle_data(D, L)
-
-    num_data = D.shape[0]
-    inp_dim = D.shape[1]
-
-    art_params = ARTParam('ART', 4, 0.8, 1.0, 0.001)
-    crn_params = ARTParam('CRN', 4, 0.8, 1.0)
-
-    ART = ARTNet(art_params)
-    CRN = ARTNet(crn_params)
-
-    for i in range(num_data):
-        ART.Train(D[i])
-        CRN.Train(D[i])
-
-    ART_R = []
-    CRN_R = []
-    for i in range(num_data):
-        ART_R.append(ART.Test(D[i]))
-        CRN_R.append(CRN.Test(D[i]))
-
-    Z = CRN.HA('single')

@@ -1,6 +1,5 @@
 import numpy as np
 import csv
-import pandas as pd
 
 
 def load_clus_data(data_name):
@@ -10,7 +9,6 @@ def load_clus_data(data_name):
     if not data_name in name_list:
         print("Unavailable Data")
         return None
-
 
     if data_name == 'covtype':
         file_name = './Data/Clustering_Data/covtype.data'
@@ -31,9 +29,8 @@ def load_clus_data(data_name):
 
         return D, L
 
-
     elif data_name == 'iris':
-        file_name = './Clustering_Data/iris.data'
+        file_name = './data/iris.data'
         with open(file_name) as file:
             lines = file.readlines()
 
@@ -231,8 +228,6 @@ def load_clus_data(data_name):
 
         return D, L
 
-
-
     elif data_name == 'balancescale':
         file_name = './Data/Clustering_Data/Balance_Scale/balance-scale.data'
         with open(file_name) as file:
@@ -384,69 +379,3 @@ def shuffle_data(D,L):
     num_data = D.shape[0]
     idx = np.random.permutation(num_data)
     return D[idx], L[idx]
-
-
-def load_ai(data_path):
-    f = open(data_path)
-    lines = f.readlines()
-    D = []
-    for line in lines:
-        data = line.split()
-        data = np.asarray(data)
-        data = data.astype(np.float)
-        D.append(data)
-    D = np.asarray(D)
-    L = D[:, -1].astype(int)
-    D = D[:, :-1]
-    return D, L
-
-def load_ai_latent(data_path, label_path):
-    D = np.load(data_path)
-    L = np.load(label_path)
-    D = D + np.random.normal(0, 0.01, D.shape)
-    return D, L
-
-
-def load_iu(data_path):
-    f0 = pd.read_excel(data_path)
-    names = f0.columns.ravel()
-    for i in range(12):
-        if i==0:
-            col = np.array(f0[names[i]].tolist())+np.random.normal(0,0.1,225)
-            col = np.expand_dims(col, axis=1)
-        else:
-            temp = np.array(f0[names[i]].tolist())+np.random.normal(0,0.1,225)
-
-            temp = np.expand_dims(temp, axis=1)
-            col = np.concatenate((col,temp), axis=1)
-    for i in range(13,17):
-        temp = np.array(f0[names[i]].tolist())
-        temp = np.expand_dims(temp, axis=1)
-        col = np.concatenate((col, temp), axis=1)
-
-    col = np.random.permutation(col) # Only shuffle along axis=0. Remaining axis not shuffled.
-    raw_data = col[:,:12]
-    lab = col[:,12:]
-    label = np.where(lab==1)[1]
-    data = np.expand_dims(raw_data, axis=1)
-    data = data[:, 0]
-    return data, label
-
-def load_js(data_path):
-    f = pd.read_excel(data_path)
-    names = f.columns.ravel()
-    D = []
-    for i in range(names.shape[0]):
-        a = np.asarray(f[names[i]].tolist())
-        D.append(a)
-    D = np.asarray(D)
-    D = D.astype('float')
-    D = D.swapaxes(0,1)
-    L = D[:, 11]
-    return D, L
-
-def load_yh(data_path):
-    D = np.load(data_path)
-    L = D[:,-1]
-    D = D[:,:-1]
-    return D,L
