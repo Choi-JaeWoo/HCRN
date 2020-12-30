@@ -1,4 +1,3 @@
-from scipy import cluster
 import matplotlib.pyplot as plt
 import numpy as np
 
